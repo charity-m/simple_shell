@@ -13,9 +13,9 @@
 #include <errno.h>
 
 /* for read/write buffers */
-#define READ_BUFF_SIZE 1024
-#define WRITE_BUFF_SIZE 1024
-#define BUFF_FLUSH -1
+#define READ_BUF_SIZE 1024
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH -1
 
 /* for command chaining */
 #define CMD_NORM	0
@@ -35,40 +35,8 @@
 #define HIST_MAX	4096
 
 extern char **environ;
-typedef struct passinfo
-{
-	char *arg;
-	char **argv;
-	char *path;
-	int argc;
-	unsigned int line_count;
-	int err_num;
-	int linecount_flag;
-	char *fname;
-	char **environ;
-	int env_changed;
-	int status;
 
-	char **cmd_buff; /* pointer to cmd ; chain buffer, for memory mangement */
-	int cmd_buff_type; /* CMD_type ||, &&, ; */
-	int readfd;
-	int histcount;
-} info_t;
 
-#define INFO_INIT \
-{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
-	0, 0, 0}
-
-/**
- *struct builtin - contains a builtin string and related function
- *@type: the builtin command flag
- *@func: the function
- */
-typedef struct builtin
-{
-	char *type;
-	int (*func)(info_t *);
-} builtin_table;
 /**
  * struct liststr - singly linked list
  * @num: the number field
@@ -77,9 +45,6 @@ typedef struct builtin
  */
 typedef struct liststr
 {
-	list_t *env;
-	list_t *history;
-	list_t *alias;
 	int num;
 	char *str;
 	struct liststr *next;
@@ -102,11 +67,49 @@ typedef struct liststr
  *@alias: the alias node
  *@env_changed: on if environ was changed
  *@status: the return status of the last exec'd command
- *@cmd_buff: address of pointer to cmd_buf, on if chaining
- *@cmd_buff_type: CMD_type ||, &&, ;
+ *@cmd_buf: address of pointer to cmd_buf, on if chaining
+ *@cmd_buf_type: CMD_type ||, &&, ;
  *@readfd: the fd from which to read line input
  *@histcount: the history line number count
  */
+typedef struct passinfo
+{
+	char *arg;
+	char **argv;
+	char *path;
+	int argc;
+	unsigned int line_count;
+	int err_num;
+	int linecount_flag;
+	char *fname;
+	list_t *env;
+	list_t *history;
+	list_t *alias;
+	char **environ;
+	int env_changed;
+	int status;
+
+	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+	int cmd_buf_type; /* CMD_type ||, &&, ; */
+	int readfd;
+	int histcount;
+} info_t;
+
+#define INFO_INIT \
+{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
+	0, 0, 0}
+
+/**
+ *struct builtin - contains a builtin string and related function
+ *@type: the builtin command flag
+ *@func: the function
+ */
+typedef struct builtin
+{
+	char *type;
+	int (*func)(info_t *);
+} builtin_table;
+
 /* toem_dhandling.c */
 int is_chain(info_t *, char *, size_t *);
 void check_chain(info_t *, char *, size_t *, size_t, size_t);
