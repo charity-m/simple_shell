@@ -45,9 +45,6 @@ typedef struct passinfo
 	int err_num;
 	int linecount_flag;
 	char *fname;
-	list_t *env;
-	list_t *history;
-	list_t *alias;
 	char **environ;
 	int env_changed;
 	int status;
@@ -80,6 +77,9 @@ typedef struct builtin
  */
 typedef struct liststr
 {
+	list_t *env;
+	list_t *history;
+	list_t *alias;
 	int num;
 	char *str;
 	struct liststr *next;
@@ -227,4 +227,4 @@ int hsh(info_t *, char **);
 int find_builtin(info_t *);
 void find_cmd(info_t *);
 void fork_cmd(info_t *);
-
+#endif
