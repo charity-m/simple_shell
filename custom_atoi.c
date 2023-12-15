@@ -25,6 +25,11 @@ int _isalphbc(int c)
 	else
 		return (0);
 }
+/**
+ * _atoi - takes string and converts to integer
+ * @s: the string to input
+ * Return: 1 if '+', 0 otherwise
+ */
 int _atoi(char *s)
 {
 	int i, sign = 1, flag = 0, output;
