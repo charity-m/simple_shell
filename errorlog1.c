@@ -1,4 +1,33 @@
 #include "shell.h"
+
+/**
+ * _erratoi - converts a string to an integer
+ * @s: the string to be converted
+ * Return: 0 if no numbers in string, converted number otherwise
+ *       -1 on error
+ */
+int _erratoi(char *s)
+{
+	int i = 0;
+	unsigned long int result = 0;
+
+	if (*s == '+')
+		s++;  /* TODO: why does this make main return 255? */
+	for (i = 0;  s[i] != '\0'; i++)
+	{
+		if (s[i] >= '0' && s[i] <= '9')
+		{
+			result *= 10;
+			result += (s[i] - '0');
+			if (result > INT_MAX)
+				return (-1);
+		}
+		else
+			return (-1);
+	}
+	return (result);
+}
+
 /**
  * print_error - prints an error message
  * @info: the parameter & return info struct
@@ -26,16 +55,16 @@ void print_error(info_t *info, char *estr)
  */
 int print_d(int input, int fd)
 {
-	int (*__ptchar)(char) = _ptchar;
+	int (*__putchar)(char) = _putchar;
 	int i, count = 0;
 	unsigned int _abs_, current;
 
 	if (fd == STDERR_FILENO)
-		__ptchar = _eptchar;
+		__putchar = _eputchar;
 	if (input < 0)
 	{
 		_abs_ = -input;
-		__ptchar('-');
+		__putchar('-');
 		count++;
 	}
 	else
@@ -45,12 +74,12 @@ int print_d(int input, int fd)
 	{
 		if (_abs_ / i)
 		{
-			__ptchar('0' + current / i);
+			__putchar('0' + current / i);
 			count++;
 		}
 		current %= i;
 	}
-	__ptchar('0' + current);
+	__putchar('0' + current);
 	count++;
 
 	return (count);
@@ -108,31 +137,4 @@ void remove_comments(char *buf)
 			buf[i] = '\0';
 			break;
 		}
-}
-/**
- * _erratoi - converts a string to an integer
- * @s: the string to be converted
- * Return: 0 if no numbers in string, converted number otherwise
- *       -1 on error
- */
-int _erratoi(char *s)
-{
-	int i = 0;
-	unsigned long int result = 0;
-
-	if (*s == '+')
-		s++;  /* TODO: why does this make main return 255? */
-	for (i = 0;  s[i] != '\0'; i++)
-	{
-		if (s[i] >= '0' && s[i] <= '9')
-		{
-			result *= 10;
-			result += (s[i] - '0');
-			if (result > INT_MAX)
-				return (-1);
-		}
-		else
-			return (-1);
-	}
-	return (result);
 }
